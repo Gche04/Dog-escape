@@ -93,6 +93,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!54 &998167848634090804
 Rigidbody:
@@ -130,13 +131,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 725253417105449123}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6be73a1f02e4b6d4190f5571268dede8, type: 3}
+  m_Script: {fileID: 11500000, guid: a4b5129ebe0cc0a4fa1b2cd4fde8eb6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  turnForce: 100
-  camRot: 10
-  cam: {fileID: 0}
-  camRotate: {fileID: 0}
+  creatureName: 
+  speed: 14
+  turn: 100
+  cameraController: {fileID: 0}
+  cameraRotationSpeed: 35
 --- !u!65 &6671503343454878450
 BoxCollider:
   m_ObjectHideFlags: 0

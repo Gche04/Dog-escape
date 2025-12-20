@@ -7,7 +7,7 @@ public class Player : Creature
 
     [SerializeField] float speed = 14f;
     [SerializeField] float turn = 100f;
-    float jump = 5;
+    float jump = 20f;
 
     //float cameraPositionOffset = 24f;
     
@@ -35,10 +35,10 @@ public class Player : Creature
     // Update is called once per frame
     void Update()
     {
-        if (isAlive)
-        {
+        //if (isAlive)
+        //{
             Move();
-        }
+        //}
         
     }
 
@@ -72,29 +72,8 @@ public class Player : Creature
             cameraController.transform.rotation, 
             transform.rotation, 
             cameraRotationSpeed * Time.deltaTime
-            ));
-
-        /*mainCamera.transform.SetPositionAndRotation(
-            transform.position + new Vector3(0, cameraPositionOffset, 0),
-            Quaternion.Slerp(
-                mainCamera.transform.rotation, 
-                transform.rotation, 
-                cameraRotationSpeed * Time.deltaTime
             )
-        );*/
-
-
-        
-        /*    
-        mainCamera.transform.position = transform.position + new Vector3(0, 24, 0);
-
-        mainCamera.transform.rotation = Quaternion.Slerp(
-            mainCamera.transform.rotation, 
-            transform.rotation, 
-            cameraRotationSpeed * Time.deltaTime
-            );
-            
-            */
+        );
     }
 
     void OnCollisionEnter(Collision collision)

@@ -5,24 +5,38 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] dogs;
     public GameObject food;
     public GameObject live;
-    public int foodcount = 20;
 
     float bound = 48f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        InstantiateObject(dogs[0], 1);
-        InstantiateObject(dogs[1], 4);
-        InstantiateObject(dogs[2], 6);
-        InstantiateObject(food, foodcount);
-        InstantiateObject(live, 2);
-        
+        PrepareGameObjectsForLevel(GameManager.Instance.Level());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void PrepareGameObjectsForLevel(int level)
+    {
+        int[] dogCountArr = GameManager.Instance.DogCountArray();
+
+        if (level == 1)
+        {
+            InstantiateObject(dogs[0], dogCountArr[0]);
+            InstantiateObject(dogs[1], dogCountArr[1]);
+            InstantiateObject(dogs[2], dogCountArr[2]);
+            InstantiateObject(dogs[3], dogCountArr[3]);
+
+            InstantiateObject(food, GameManager.Instance.FoodCount());
+            InstantiateObject(live, GameManager.Instance.LiveCount());
+        }else
+        {
+            Debug.LogError("Only level one is ready at the moment");
+        }
     }
 
     void InstantiateObject(GameObject thing, int count)

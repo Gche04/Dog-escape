@@ -1,27 +1,29 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {get; private set;} // Static reference to the singleton instance
+    public static GameManager Instance; // Static reference to the singleton instance
 
-    [SerializeField] SpawnManager spawnManager;
-    
     int currentLevel;
     bool isANewGame = true;
     int playerHealth;
+    int food = 20;
+    int live = 2;
 
-    int foodCount;
-    int liveCount;
+    //dog instance count according to arrangement in array
+    // dog[3] position in array is for intelligent dog
+    int[] dogCounts = { 1, 3, 5, 1 };
 
-    int dog0Count;
-    int dog1Count;
-    int dog2Count;
-    
-    int intelligentDogCount;
+    float boundary = 48f;
 
-    float bounary;
-
+    public int Level() { return currentLevel; }
+    public bool ANewGame() { return isANewGame; }
+    public int FoodCount() { return food; }
+    public int LiveCount() { return live; }
+    public int[] DogCountArray() { return dogCounts; }
 
     void Awake()
     {
@@ -42,13 +44,23 @@ public class GameManager : MonoBehaviour
     public void StartNewGame()
     {
         currentLevel = 1;
-        SetPlayerHealth();
         SceneManager.LoadScene(currentLevel);
     }
 
-    public void Save()
+    public void ExitGame()
     {
+        SaveGame();
+
+        Application.Quit(); 
         
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
+    public void SaveGame()
+    {
+        //savecurrentGame data
     }
 
     public void ContinueGame()
@@ -56,10 +68,5 @@ public class GameManager : MonoBehaviour
         //load saved game
     }
 
-    void SetPlayerHealth()
-    {
-        playerHealth += currentLevel + 2;
-    }
 
-    
 }

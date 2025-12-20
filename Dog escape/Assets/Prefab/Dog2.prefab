@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1720966893931481899}
   - component: {fileID: 7228898015342942428}
   - component: {fileID: 6142277581178039925}
+  - component: {fileID: 5775750617492736996}
   m_Layer: 0
   m_Name: Dog2
   m_TagString: Dog
@@ -157,6 +158,22 @@ MonoBehaviour:
   creatureName: 
   speed: 12
   turn: 80
+--- !u!208 &5775750617492736996
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8771270842999193062}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &7260897298479445001
 PrefabInstance:
   m_ObjectHideFlags: 0
