@@ -25,7 +25,10 @@ public class IntelligentDog : Creature
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if (GameManager.Instance.GetIsPlayerAlive())
+        {
+            Move();
+        }
     }
 
     protected override void Move()

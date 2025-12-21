@@ -9,14 +9,6 @@ public class Player : Creature
     [SerializeField] float turn = 100f;
     float jump = 20f;
 
-    //float cameraPositionOffset = 24f;
-    
-
-    int healtCount = 5;
-    //int foodLeft = 20;
-    //public float bounary = 49f;
-
-    //Camera mainCamera;
     [SerializeField] GameObject cameraController;
     [SerializeField] float cameraRotationSpeed = 35f;
 
@@ -24,21 +16,25 @@ public class Player : Creature
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        //mainCamera = Camera.main;
 
-        health = healtCount;
+        health = GameManager.Instance.GetPlayerHealth();
         runSpeed = speed;
         jumpSpeed = jump;
         turnSpeed = turn;
+
+        if (!GameManager.Instance.GetIsANewGame())
+        {
+            transform.position = GameManager.Instance.GetSavedPlayerPos();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (isAlive)
-        //{
+        if (isAlive)
+        {
             Move();
-        //}
+        }
         
     }
 
@@ -78,9 +74,15 @@ public class Player : Creature
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Dog"))
+        if (collision.gameObject.CompareTag("Dog1") ||
+            collision.gameObject.CompareTag("Dog2") ||
+            collision.gameObject.CompareTag("Dog3") ||
+            collision.gameObject.CompareTag("Dog4")
+        )
         {
+            Debug.Log(health);
             TakeDamage();
+            GameManager.Instance.SetPlayerHealth(health);
             speed += jumpSpeed;
             StartCoroutine(BackToNormalSpeed());
 
@@ -92,11 +94,12 @@ public class Player : Creature
         if (other.gameObject.CompareTag("Live"))
         {
             AddHealth();
+            GameManager.Instance.SetPlayerHealth(health);
         }
 
         else if (other.gameObject.CompareTag("Food"))
         {
-            //foodLeft--;
+            GameManager.Instance.ReduceFood();
         }
         Destroy(other.gameObject);
     }

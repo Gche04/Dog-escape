@@ -1,15 +1,22 @@
-using TMPro;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance; // Static reference to the singleton instance
 
+    string saveFilePath;
+    string gameSaveFileName = "gamesave.json";
+
     int currentLevel;
     bool isANewGame = true;
-    int playerHealth;
+    bool isPlayerAlive = true;
+    public bool savedGameWasDeleted = false;
+    bool gameIsActive = false;
+    int playerHealth = 5;
     int food = 20;
     int live = 2;
 
@@ -19,54 +26,234 @@ public class GameManager : MonoBehaviour
 
     float boundary = 48f;
 
-    public int Level() { return currentLevel; }
-    public bool ANewGame() { return isANewGame; }
-    public int FoodCount() { return food; }
-    public int LiveCount() { return live; }
-    public int[] DogCountArray() { return dogCounts; }
+    public int GetLevel() { return currentLevel; }
+    public bool GetIsANewGame() { return isANewGame; }
+    public bool GetIsPlayerAlive() { return isPlayerAlive; }
+    public int GetPlayerHealth() { return playerHealth; }
+
+    public int GetFood() { return food; }
+    public int GetLive() { return live; }
+    public int[] GetDogCounts() { return dogCounts; }
+
+    public void ReduceFood() { food--; }
+    public float GetBounary() { return boundary; }
+
+
+    public void SetPlayerHealth(int healt) { 
+        if (healt >= 0)
+        {
+            playerHealth = healt;
+        }
+         
+    }
+    public void SetIsPlayerAlive(bool value) { isPlayerAlive = value; }
+
+
+    Vector3 savedPlayerPosition;
+    List<Vector3> savedFoodPositions;
+    List<Vector3> savedLivePositions;
+    List<Vector3> savedDog1Positions;
+    List<Vector3> savedDog2Positions;
+    List<Vector3> savedDog3Positions;
+    List<Vector3> savedDog4Positions;
+
+    
+    public Vector3 GetSavedPlayerPos() { return savedPlayerPosition; }
+    public List<Vector3> GetSavedFoodPos() { return savedFoodPositions; }
+    public List<Vector3> GetSavedLivePos() { return savedLivePositions; }
+    public List<Vector3> GetSavedDog1Pos() { return savedDog1Positions; }
+    public List<Vector3> GetSavedDog2Pos() { return savedDog2Positions; }
+    public List<Vector3> GetSavedDog3Pos() { return savedDog3Positions; }
+    public List<Vector3> GetSavedDog4Pos() { return savedDog4Positions; }
 
     void Awake()
     {
+        saveFilePath = Path.Combine(Application.persistentDataPath, gameSaveFileName);
         // Check if an instance already exists
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            // If not, set this object as the instance and prevent it from being destroyed
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            // If another instance already exists, destroy this new one to enforce the singleton pattern
             Destroy(gameObject);
+            return;
         }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SaveData savedData = LoadSavedGame();
+        if (savedData != null)
+        {
+            isANewGame = false;
+
+            currentLevel = savedData.currentLevel;
+            playerHealth = savedData.playerHealth;
+            food = savedData.food;
+            live = savedData.live;
+
+            savedPlayerPosition = savedData.savedPlayerPosition;
+            savedFoodPositions = savedData.foodPositions;
+            savedLivePositions = savedData.livePositions;
+            savedDog1Positions = savedData.dog1Positions;
+            savedDog2Positions = savedData.dog2Positions;
+            savedDog3Positions = savedData.dog3Positions;
+            savedDog4Positions = savedData.dog4Positions;
+        }
+
     }
 
     public void StartNewGame()
     {
         currentLevel = 1;
         SceneManager.LoadScene(currentLevel);
-    }
-
-    public void ExitGame()
-    {
-        SaveGame();
-
-        Application.Quit(); 
-        
-        #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-    }
-
-    public void SaveGame()
-    {
-        //savecurrentGame data
+        gameIsActive = true;
     }
 
     public void ContinueGame()
     {
-        //load saved game
+        SceneManager.LoadScene(currentLevel);
+        gameIsActive = true;
     }
 
+    public void ExitGame()
+    {
+        SaveGame(DataToSave());
+
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
+    }
+
+    SaveData DataToSave()
+    {
+        SaveData saveData = new(
+            currentLevel,
+            playerHealth,
+            food,
+            live,
+            GetGameObjectVector3("Player"),
+            GetGameObjectsLocations("Food"),
+            GetGameObjectsLocations("Live"),
+            GetGameObjectsLocations("Dog1"),
+            GetGameObjectsLocations("Dog2"),
+            GetGameObjectsLocations("Dog3"),
+            GetGameObjectsLocations("Dog4")
+        );
+
+        return saveData;
+    }
+
+    public void SaveGame(SaveData data)
+    {
+        if (gameIsActive)
+        {
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(saveFilePath, json);
+        }
+
+    }
+
+    public SaveData LoadSavedGame()
+    {
+        if (File.Exists(saveFilePath))
+        {
+            string json = File.ReadAllText(saveFilePath);
+
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            return data;
+        }
+        else
+        {
+            Debug.LogWarning("save file not found");
+            return null;
+        }
+    }
+
+    public void ClearSaveFile()
+    {
+        if (File.Exists(saveFilePath))
+        {
+            File.Delete(saveFilePath);
+        }
+
+        savedGameWasDeleted = true;
+        gameIsActive = false;
+        isANewGame = true;
+    }
+
+    List<Vector3> GetGameObjectsLocations(string tag)
+    {
+        List<Vector3> positions = new();
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
+
+        foreach (GameObject item in gameObjects)
+        {
+            positions.Add(item.transform.position);
+        }
+        return positions;
+    }
+
+    Vector3 GetGameObjectVector3(string tag)
+    {
+        GameObject gameObject =  GameObject.FindGameObjectWithTag(tag);
+        if (gameObject != null)
+        {
+            return gameObject.transform.position;
+        }
+        
+        return new Vector3();
+    }
+
+
+    [Serializable]
+    public class SaveData
+    {
+        public int currentLevel;
+        public int playerHealth;
+        public int food;
+        public int live;
+
+        public Vector3 savedPlayerPosition;
+        public List<Vector3> foodPositions;
+        public List<Vector3> livePositions;
+        public List<Vector3> dog1Positions;
+        public List<Vector3> dog2Positions;
+        public List<Vector3> dog3Positions;
+        public List<Vector3> dog4Positions;
+
+        public SaveData(
+                int currentLevel,
+                int playerHealth,
+                int food,
+                int live,
+                Vector3 savedPlayerPosition,
+                List<Vector3> foodPositions,
+                List<Vector3> livePositions,
+                List<Vector3> dog1Positions,
+                List<Vector3> dog2Positions,
+                List<Vector3> dog3Positions,
+                List<Vector3> dog4Positions
+            )
+        {
+
+            this.currentLevel = currentLevel;
+            this.playerHealth = playerHealth;
+            this.food = food;
+            this.live = live;
+
+            this.savedPlayerPosition = savedPlayerPosition;
+            this.foodPositions = foodPositions;
+            this.livePositions = livePositions;
+            this.dog1Positions = dog1Positions;
+            this.dog2Positions = dog2Positions;
+            this.dog3Positions = dog3Positions;
+            this.dog4Positions = dog4Positions;
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveGame(DataToSave());
+    }
 
 }
