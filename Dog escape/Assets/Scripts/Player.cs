@@ -35,7 +35,10 @@ public class Player : Creature
         {
             Move();
         }
-        
+        else
+        {
+            GameManager.Instance.SetIsPlayerAlive(isAlive);
+        }
     }
 
     void LateUpdate()
@@ -80,7 +83,7 @@ public class Player : Creature
             collision.gameObject.CompareTag("Dog4")
         )
         {
-            Debug.Log(health);
+            Debug.Log(GameManager.Instance.GetPlayerHealth());
             TakeDamage();
             GameManager.Instance.SetPlayerHealth(health);
             speed += jumpSpeed;

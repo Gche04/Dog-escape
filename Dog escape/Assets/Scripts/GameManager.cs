@@ -39,16 +39,18 @@ public class GameManager : MonoBehaviour
     public float GetBounary() { return boundary; }
 
 
-    public void SetPlayerHealth(int healt) { 
+    public void SetPlayerHealth(int healt)
+    {
         if (healt >= 0)
         {
             playerHealth = healt;
         }
-         
     }
     public void SetIsPlayerAlive(bool value) { isPlayerAlive = value; }
 
-
+    //hold position of game objects
+    // vector3 for players position
+    //vector3 list for other objects
     Vector3 savedPlayerPosition;
     List<Vector3> savedFoodPositions;
     List<Vector3> savedLivePositions;
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour
     List<Vector3> savedDog3Positions;
     List<Vector3> savedDog4Positions;
 
-    
+
     public Vector3 GetSavedPlayerPos() { return savedPlayerPosition; }
     public List<Vector3> GetSavedFoodPos() { return savedFoodPositions; }
     public List<Vector3> GetSavedLivePos() { return savedLivePositions; }
@@ -97,6 +99,20 @@ public class GameManager : MonoBehaviour
             savedDog4Positions = savedData.dog4Positions;
         }
 
+    }
+
+    public void GameOver()
+    {
+        ClearSaveFile();
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene(currentLevel);
+        gameIsActive = true;
+        isPlayerAlive = true;
+        playerHealth = 5;
+        food = 20;
+        live = 2;
     }
 
     public void StartNewGame()
@@ -195,12 +211,12 @@ public class GameManager : MonoBehaviour
 
     Vector3 GetGameObjectVector3(string tag)
     {
-        GameObject gameObject =  GameObject.FindGameObjectWithTag(tag);
+        GameObject gameObject = GameObject.FindGameObjectWithTag(tag);
         if (gameObject != null)
         {
             return gameObject.transform.position;
         }
-        
+
         return new Vector3();
     }
 
