@@ -101,35 +101,32 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameOver()
+    public void StartGame()
     {
-        ClearSaveFile();
-    }
-    public void Restart()
-    {
-        SceneManager.LoadScene(currentLevel);
-        gameIsActive = true;
-        isPlayerAlive = true;
-        playerHealth = 5;
-        food = 20;
-        live = 2;
-    }
+        if (InGameMenu.Instance.gamePaused)
+        {
+            InGameMenu.Instance.ReturnToGame();
+            return;
+        }
 
-    public void StartNewGame()
-    {
-        currentLevel = 1;
+        if (isANewGame)
+        {
+            currentLevel = 1;
+        }
         SceneManager.LoadScene(currentLevel);
         gameIsActive = true;
-    }
-
-    public void ContinueGame()
-    {
-        SceneManager.LoadScene(currentLevel);
-        gameIsActive = true;
+        MainMenuManager.Instance.mainMenuPanel.SetActive(false);
+        InGameMenu.Instance.inGameMenuPanel.SetActive(true);
+        GameStatsManager.Instance.gameStatsPanel.SetActive(true);
     }
 
     public void ExitGame()
     {
+        if (!isPlayerAlive)
+        {
+            ClearSaveFile();
+        }
+
         SaveGame(DataToSave());
 
         Application.Quit();
@@ -138,6 +135,25 @@ public class GameManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
 
+    }
+
+
+    public void Restart()
+    {
+        InGameMenu.Instance.gameOverPanel.SetActive(false);
+        ClearSaveFile();
+
+        gameIsActive = true;
+        currentLevel = 1;
+        SceneManager.LoadScene(currentLevel);
+    }
+
+    void DefaultStat(int level)
+    {
+        isPlayerAlive = true;
+        playerHealth = 5;
+        food = 20;
+        live = 2;
     }
 
     SaveData DataToSave()
@@ -192,6 +208,7 @@ public class GameManager : MonoBehaviour
             File.Delete(saveFilePath);
         }
 
+        DefaultStat(1);
         savedGameWasDeleted = true;
         gameIsActive = false;
         isANewGame = true;
@@ -269,6 +286,10 @@ public class GameManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        if (!isPlayerAlive)
+        {
+            ClearSaveFile();
+        }
         SaveGame(DataToSave());
     }
 

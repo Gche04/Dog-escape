@@ -25,16 +25,17 @@ public class IntelligentDog : Creature
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.GetIsPlayerAlive())
-        {
-            Move();
-        }
+        Move();
     }
 
     protected override void Move()
     {
         // Set the agent's destination. The NavMeshAgent handles the pathfinding and avoidance.
-        dogNMA.SetDestination(player.transform.position);
+        if (GameManager.Instance.GetIsPlayerAlive())
+        {
+            Debug.Log(GameManager.Instance.GetIsPlayerAlive());
+            dogNMA.SetDestination(player.transform.position);
+        }
     }
 
 }

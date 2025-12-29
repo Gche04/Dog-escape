@@ -1,25 +1,39 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    public static MainMenuManager Instance;
 
+    public GameObject mainMenuPanel;
     [SerializeField] TMP_Text levelText;
     [SerializeField] Button startButton;
     [SerializeField] Button resumeButton;
     [SerializeField] Button clearHistoryButton;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    void Awake()
     {
-        
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
     void Update()
     {
-        PrepareMainMenu();
+        //handles main menu only game is not paused
+        if (!InGameMenu.Instance.gamePaused)
+        {
+            PrepareMainMenu();
+        }
+        
     }
 
     void PrepareMainMenu()
@@ -34,6 +48,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    // main menu for new game
     void DefaultMenu()
     {
         levelText.text = "Level : 1";
@@ -43,6 +58,7 @@ public class MainMenuManager : MonoBehaviour
         clearHistoryButton.gameObject.SetActive(false);
     }
 
+    // main menu for when its not a new game
     void ContinueGameMenu()
     {
         levelText.text = "Level : " + GameManager.Instance.GetLevel();
@@ -50,5 +66,16 @@ public class MainMenuManager : MonoBehaviour
         startButton.gameObject.SetActive(false);
         resumeButton.gameObject.SetActive(true);
         clearHistoryButton.gameObject.SetActive(true);
+    }
+
+    // paused menu
+    public void PausedGameMenu()
+    {
+        mainMenuPanel.SetActive(true);
+        levelText.text = "Paused--  Level : " + GameManager.Instance.GetLevel();
+        
+        startButton.gameObject.SetActive(false);
+        resumeButton.gameObject.SetActive(true);
+        clearHistoryButton.gameObject.SetActive(false);
     }
 }

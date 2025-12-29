@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8607267992147000983}
   - component: {fileID: 8684299491928585908}
   - component: {fileID: 998167848634090804}
-  - component: {fileID: 8247466413207411821}
   - component: {fileID: 6671503343454878450}
   - component: {fileID: 5570088620755522022}
+  - component: {fileID: 3558605769162858631}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -122,23 +122,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 2
---- !u!114 &8247466413207411821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 725253417105449123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b5129ebe0cc0a4fa1b2cd4fde8eb6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  creatureName: 
-  speed: 14
-  turn: 100
-  cameraController: {fileID: 0}
-  cameraRotationSpeed: 35
 --- !u!65 &6671503343454878450
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -173,6 +156,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoundaryManager
   bounary: 49
+--- !u!114 &3558605769162858631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725253417105449123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b5129ebe0cc0a4fa1b2cd4fde8eb6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  creatureName: 
+  speed: 14
+  turn: 100
+  cameraController: {fileID: 0}
+  cameraRotationSpeed: 35
 --- !u!1001 &3780036988340808971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -235,7 +235,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100066, guid: 4a7c3ad7168bb834b87a91e3f94ad3d6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3045360273951899405}
+      addedObject: {fileID: 8615677617597623547}
   m_SourcePrefab: {fileID: 100100000, guid: 4a7c3ad7168bb834b87a91e3f94ad3d6, type: 3}
 --- !u!4 &3780036988340680649 stripped
 Transform:
@@ -247,7 +247,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 100066, guid: 4a7c3ad7168bb834b87a91e3f94ad3d6, type: 3}
   m_PrefabInstance: {fileID: 3780036988340808971}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &3045360273951899405
+--- !u!65 &8615677617597623547
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -266,5 +266,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7250842, y: 2.990292, z: 0.8872789}
-  m_Center: {x: -0.008825779, y: 1.4554851, z: -0.005116284}
+  m_Size: {x: 1, y: 3.107052, z: 1}
+  m_Center: {x: 0, y: 1.4749366, z: 0}

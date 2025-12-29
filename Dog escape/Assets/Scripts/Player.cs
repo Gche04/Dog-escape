@@ -83,7 +83,6 @@ public class Player : Creature
             collision.gameObject.CompareTag("Dog4")
         )
         {
-            Debug.Log(GameManager.Instance.GetPlayerHealth());
             TakeDamage();
             GameManager.Instance.SetPlayerHealth(health);
             speed += jumpSpeed;
