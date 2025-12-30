@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,7 @@ public class InGameMenu : MonoBehaviour
     {
         if (!GameManager.Instance.GetIsPlayerAlive())
         {
-            GameOverMenu();
+            StartCoroutine(DelayGameOverMenu());
         }
     }
 
@@ -47,10 +48,14 @@ public class InGameMenu : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    IEnumerator DelayGameOverMenu()
+    {
+        yield return new WaitForSeconds(2);
+        GameOverMenu();
+    }
     void GameOverMenu()
     {
         gameOverPanel.SetActive(true);
         pauseButton.gameObject.SetActive(false);
-        
     }
 }

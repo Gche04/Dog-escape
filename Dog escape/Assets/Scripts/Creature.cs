@@ -4,6 +4,8 @@ public abstract class Creature : MonoBehaviour
 {
     public string creatureName;
 
+    protected Animator animator; 
+
     protected int health;
 
     protected float walkSpeed;

@@ -1,13 +1,9 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class IntelligentDog : Creature
 {
-
-    [SerializeField] float speed = 10;
-    [SerializeField] float turn = 100;
-
-    Rigidbody dogRb;
     NavMeshAgent dogNMA;
 
     GameObject player;
@@ -15,10 +11,8 @@ public class IntelligentDog : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        runSpeed = speed;
-        turnSpeed = turn;
         player = GameObject.Find("Player");
-        dogRb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         dogNMA = GetComponent<NavMeshAgent>();
     }
 
@@ -31,10 +25,13 @@ public class IntelligentDog : Creature
     protected override void Move()
     {
         // Set the agent's destination. The NavMeshAgent handles the pathfinding and avoidance.
-        if (GameManager.Instance.GetIsPlayerAlive())
+        if (GameManager.Instance.GetPlayerHealth() > 0)
         {
-            Debug.Log(GameManager.Instance.GetIsPlayerAlive());
             dogNMA.SetDestination(player.transform.position);
+        }else
+        {
+            animator.SetFloat("Speed_f", 0);
+            animator.SetBool("Eat_b", true);
         }
     }
 

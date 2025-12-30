@@ -17,6 +17,9 @@ public class Player : Creature
     {
         playerRb = GetComponent<Rigidbody>();
 
+        //get child of gameobject then get animator component
+        animator = transform.GetChild(0).GetComponent<Animator>();
+
         health = GameManager.Instance.GetPlayerHealth();
         runSpeed = speed;
         jumpSpeed = jump;
@@ -38,6 +41,8 @@ public class Player : Creature
         else
         {
             GameManager.Instance.SetIsPlayerAlive(isAlive);
+            animator.SetBool("Death_b", true);
+            animator.SetInteger("DeathType_int", 1);
         }
     }
 
@@ -51,18 +56,26 @@ public class Player : Creature
         //gets user input
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-
-        // calculates player move direction
-        // normalized* gives movement magnitude of 1, preventing faster diagonal movement
-        Vector3 moveDirection = speed * verticalInput * transform.forward;
-        // moves player
-        playerRb.linearVelocity = new Vector3(moveDirection.x, playerRb.linearVelocity.y, moveDirection.z);
+        
         // calculates turn
         float turn = horizontalInput * turnSpeed * Time.deltaTime;
         // sets player rotation
         Quaternion turnRot = Quaternion.Euler(0f, turn, 0f);
         // rotates player
         playerRb.MoveRotation(playerRb.rotation * turnRot);
+        
+        // calculates player move direction
+        // normalized* gives movement magnitude of 1, preventing faster diagonal movement
+        Vector3 moveDirection = verticalInput * transform.forward.normalized;
+        
+        //set speed based on movement
+        
+        float updateSpeed = (moveDirection.magnitude > 0 || turnRot.y != 0) ? speed : 0f;
+        // moves player
+        playerRb.linearVelocity = updateSpeed * moveDirection;
+        
+
+        animator.SetFloat("Speed_f", updateSpeed);
     }
 
     void CameraMovement()
